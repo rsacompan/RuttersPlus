@@ -22,6 +22,7 @@
     "appId": "com.simplesystemssoftware.RuttersPlus",
     "productName": "RuttersPlus",
     "electronVersion": "28.2.3",
+    "publish": null,
     "files": [
       "**/*"
     ],
@@ -35,17 +36,17 @@
       "buildResources": "build"
     },
     "win": {
-      "icon": "build/RuttersLogo.ico",
+      "icon": "Windows/RuttersLogo.ico",
       "target": "nsis"
     },
     "mac": {
-      "icon": "build/RuttersLogo.icns",
+      "icon": "Mac/RuttersLogo.icns",
       "target": "dmg"
     },
-   "linux": {
-  "icon": "build/linux-icon.png",
-  "category": "Utility",
-  "target": ["AppImage", "deb"]
-}
+    "linux": {
+      "icon": "build/linux-icon.png",
+      "category": "Utility",
+      "target": ["AppImage", "deb"]
+    }
   }
 }
