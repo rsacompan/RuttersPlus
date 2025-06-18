@@ -34,7 +34,7 @@
     "directories": {
       "buildResources": "build"
     },
-    "icon": "build/RuttersLogo",  // Base icon path (optional fallback)
+    "icon": "build/RuttersLogo",
     "win": {
       "icon": "build/RuttersLogo.ico",
       "target": "nsis"
