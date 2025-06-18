@@ -34,7 +34,6 @@
     "directories": {
       "buildResources": "build"
     },
-    "icon": "build/RuttersLogo",
     "win": {
       "icon": "build/RuttersLogo.ico",
       "target": "nsis"
@@ -43,10 +42,10 @@
       "icon": "build/RuttersLogo.icns",
       "target": "dmg"
     },
-    "linux": {
-      "icon": "build/RuttersLogo.png",
-      "category": "Utility",
-      "target": ["AppImage", "deb"]
-    }
+   "linux": {
+  "icon": "build/linux-icon.png",
+  "category": "Utility",
+  "target": ["AppImage", "deb"]
+}
   }
 }
