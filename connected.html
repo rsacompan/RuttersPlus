@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow" />
+<body>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Styles for computers (desktops and laptops) */
+@media only screen and (min-width: 1024px) {
+    header {
+        background-color: #bababab4;
+        border-radius: 25px;
+        margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+        width: 50%;
+    }
+}
+
+/* Styles for mobile devices (smartphones and tablets) */
+@media only screen and (max-width: 1023px) {
+    header {
+        background-color: #bababab4;
+        border-radius: 25px;
+        margin: 5% 0 15% 0; /* Removes horizontal auto-centering */
+        width: 100%; /* Ensures full width */
+    }
+}
+
+/* Footer styles */
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    bottom: 0;
+    left: 0;
+    position: absolute; /* or fixed */
+    z-index: 9998;
+}
+
+.left, .center, .right {
+    border-radius: 12px;
+    background-color: #979696b4;
+    padding: 10px;
+}
+
+.left, .right {
+    width: 10%;
+}
+
+.center {
+    text-align: center;
+    margin: 0 auto; /* Centers horizontally */
+    width: 20%;
+}
+.button1 {
+            background-color: rgba(255, 0, 0, 0.0);
+            color: black;
+            border-radius: 12px;
+            padding: 15px 32px;
+            border: 5px solid green;
+            font-size: 16px;
+            color: white;
+            width: 100%;
+        }
+
+        .button1:hover {
+            background-color: green;
+            color: white;
+        }
+        .menu {
+  width: 200px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: -200px; /* Initially hide the menu */
+  background-color: #979696b4; /* Menu color remains the same */
+  color: #fff;
+  overflow-x: hidden;
+  transition: 0.5s;
+  position: absolute; /* or fixed */ z-index: 9999;
+}
+
+.menu a {
+  padding: 10px 15px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #fff;
+  display: block;
+  transition: 0.3s;
+}
+
+.menu a:hover {
+  background-color: #575757;
+}
+
+.closebtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 36px;
+}
+/* General body and additional styles */
+body {
+    color: rgb(255, 255, 255);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('Demo wallpaper.png');
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+    </style>
+    <script>
+      
+    </script>
+</head>
+<body>
+  <div id="menu" class="menu">
+  
+    <center><h1>Options</h1></center>
+    <button class="button button1" onclick="closeMenu()">Close</button>
+    <br>
+    <br>
+   
+    <button class="button button1" onclick="b1()">Shutdown</button>
+    <br>
+    <br>
+   
+  <button class="button button1" onclick="b2()">Reboot</button>
+
+  <br>
+
+  </div>
+  
+  
+
+   <main>
+   
+
+    <br />
+    <br />
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <header>
+        <center><img src="rutterslogo.png" width="140" height="100"></center>
+        <center><h1>Rutters Needs To Restart For Next Step</h1></center>
+        <br>
+        <br>
+        <br>
+        <br>
+        <a href="https://simplesystemssoftware.net/savin/desktop">
+        <center><button class="button button1">Restart Rutters</button></center>
+        </a>
+        <br>
+        <br>
+
+    </header>
+  
+   
+    </main>
+
+   
+</div>
+</body>
+</html>
+<script>
+  function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12; // Convert to 12-hour format
+      hours = hours.toString().padStart(2, '');
+  
+      const timeString = `${hours}:${minutes}:${ampm}`;
+      document.getElementById('clock').textContent = timeString;
+  }
+  
+  setInterval(updateClock, 1000);
+  updateClock(); // initial call to set clock immediately
+  
+  </script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      const currentLeft = window.getComputedStyle(menu).left;
+    
+      if (currentLeft === '0px') {
+        menu.style.left = '-200px';
+      } else {
+        menu.style.left = '0px';
+      }
+    }
+    
+    function closeMenu() {
+      document.getElementById('menu').style.left = '-200px';
+    }
+    function toggleMenu1() {
+      const menu = document.getElementById('menu1');
+      const currentLeft = window.getComputedStyle(menu1).left;
+    
+      if (currentLeft === '0px') {
+        menu.style.left = '-200px';
+      } else {
+        menu.style.left = '0px';
+      }
+    }
+    
+    function closeMenu1() {
+      document.getElementById('menu1').style.left = '-200px';
+    }
+  </script>
+  <script>
+    function b1() {
+          location.href = "shutting down .html";
+      }
+      function b2() {
+          location.href = "restarting .html";
+      }
+      function b3() {
+          location.href = "take a test .html";
+      }
+      
+  </script>

@@ -1,0 +1,53 @@
+{
+  "name": "rutters-plus",
+  "version": "1.0.0",
+  "description": "Cross-platform app for Rutters Plus",
+  "author": "Simple System Software",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "rebuild": "electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "electron": "^28.2.3",
+    "electron-builder": "24.6.0"
+  },
+  "dependencies": {
+    "node-wifi": "^2.0.16"
+  },
+  "build": {
+    "appId": "com.simplesystemssoftware.RuttersPlus",
+    "productName": "RuttersPlus",
+    "electronVersion": "28.2.3",
+    "files": [
+      "**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/node-wifi",
+        "to": "node_modules/node-wifi"
+      }
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "icon": "build/RuttersLogo.ico",
+      "target": "nsis"
+    },
+    "mac": {
+      "icon": "build/RuttersLogo.icns",
+      "target": "dmg"
+    },
+    "linux": {
+      "icon": "build/RuttersLogo.png",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  }
+}

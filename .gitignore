@@ -1,0 +1,14 @@
+ECHO is on.
+# Ignore build and dependency folders
+node_modules/
+dist/
+.vs/
+build/.vs/
+
+# Ignore media files
+*.mp4
+*.png
+
+# Ignore system files
+.DS_Store
+Thumbs.db

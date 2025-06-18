@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WiFi Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+     background-image: url('Demo wallpaper.png');
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    }
+    header {
+      background: #bababab4;
+      border-radius: 25px;
+      margin: 5% auto 15% auto;
+      width: 90%;
+      max-width: 500px;
+      padding: 24px 0 32px 0;
+      box-shadow: 0 4px 24px #aaa5;
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+    #wifi-list {
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+      margin: 24px auto 0 auto;
+    }
+    .wifi-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 8px;
+      margin-bottom: 8px;
+      background: #e9ecef;
+      border-radius: 8px;
+      transition: background 0.18s;
+    }
+    .wifi-item:hover {
+      background: #d1e7dd;
+    }
+    .ssid-info {
+      flex: 1;
+      font-weight: bold;
+      font-size: 1.06em;
+    }
+    .security {
+      font-size: 12px;
+      color: #555;
+      margin-left: 12px;
+    }
+    .connect-btn {
+      background: #198754;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 14px;
+      margin-left: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 15px;
+    }
+    .connect-btn:hover {
+      background: #145c32;
+    }
+    .password-ui {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: #ededed;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 1px 8px #aaa3;
+      width: 100%;
+    }
+    .password-ui input {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #bbb;
+      font-size: 15px;
+      margin-bottom: 10px;
+      width: 90%;
+    }
+    .password-ui .pw-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .pw-connect, .pw-cancel {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .pw-connect { background: #198754; color: #fff; }
+    .pw-connect:hover { background: #145c32; }
+    .pw-cancel { background: #adb5bd; color: #222; }
+    .pw-cancel:hover { background: #6c757d; color: #fff; }
+    #status {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 15px;
+      color: #007bff;
+      min-height: 18px;
+    }
+    #logo {
+      display: block;
+      margin: 0 auto 10px auto;
+      width: 120px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+ <script>
+      const targetURL = "https://simplesystemssoftware.net/savin For LaunchOS/desktop/welcome boot screen .html";
+
+      async function checkConnection() {
+        try {
+          // Try to fetch a known small resource with CORS enabled
+          const response = await fetch("https://cors-test.codehappy.dev/", { cache: "no-store" });
+          if (response.ok) {
+            // Successfully reached the internet
+            window.location.href = targetURL;
+          } else {
+            console.log("Internet check failed: Bad response status");
+          }
+        } catch (err) {
+          console.log("No internet connection or request blocked:", err);
+        }
+      }
+
+      window.onload = checkConnection;
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+  <header>
+    <center>
+    <img id="logo" src="rutterslogo.png" alt="Logo">
+    <h1>Let's Get You Connected To Internet!</h1>
+    <ul id="wifi-list"></ul>
+    <div id="status"></div>
+    <a href="https://simplesystemssoftware.net/savin For LaunchOS/desktop/welcome boot screen .html"><p>Skip This Step</p></a>
+  </header>
+  <script src="renderer.js"></script>
+ 
+</body>
+</html>
