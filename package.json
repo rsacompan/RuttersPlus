@@ -2,7 +2,10 @@
   "name": "rutters-plus",
   "version": "1.0.0",
   "description": "Cross-platform app for Rutters Plus",
-  "author": "Simple System Software",
+  "author": {
+    "name": "Simple System Software",
+    "email": "support@simplesystemsoftware.net"
+  },
   "main": "main.js",
   "scripts": {
     "start": "electron .",
