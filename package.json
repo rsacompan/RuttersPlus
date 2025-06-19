@@ -1,7 +1,7 @@
 {
   "name": "rutters-plus",
   "version": "1.0.0",
-  "description": "Cross-platform app for Rutters Plus",
+  "description": "The Offical Rutters Desktop Experince",
   "author": {
     "name": "Simple System Software",
     "email": "support@simplesystemsoftware.net"
@@ -27,9 +27,31 @@
     "electronVersion": "28.2.3",
     "publish": null,
     "files": [
-      "**/*"
+      "**/*",
+      "assets/**/*",
+      "media/**/*"
     ],
     "extraResources": [
+      {
+        "from": "assets/",
+        "to": "assets/"
+      },
+      {
+        "from": "media/",
+        "to": "media/"
+      },
+       {
+        "from": "Mac/",
+        "to": "Mac/"
+      },
+       {
+        "from": "Window/s",
+        "to": "Windows/"
+      },
+       {
+        "from": "build/",
+        "to": "build/"
+      },
       {
         "from": "node_modules/node-wifi",
         "to": "node_modules/node-wifi"
@@ -44,7 +66,8 @@
     },
     "mac": {
       "icon": "Mac/RuttersLogo.icns",
-      "target": "dmg"
+      "target": "dmg",
+      "identity": null
     },
     "linux": {
       "icon": "build/linux-icon.png",
