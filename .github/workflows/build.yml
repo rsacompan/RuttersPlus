@@ -50,6 +50,7 @@ jobs:
           node-version: '20'
 
       - name: Clean and install dependencies
+        shell: cmd
         run: |
           if exist node_modules rmdir /s /q node_modules
           npm ci
