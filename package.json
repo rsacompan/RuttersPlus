@@ -66,7 +66,7 @@
       "identity": null
     },
     "linux": {
-      "icon": "build/linux-icon.png",
+      "icon": "assets/linux-icon.png",
       "category": "Utility",
       "target": [
         "AppImage",
