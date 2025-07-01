@@ -41,10 +41,7 @@
     },
     "win": {
       "icon": "Windows/RuttersLogo.ico",
-      "target": "nsis",
-      "extraResources": [
-        { "from": "Windows/", "to": "Windows/" }
-      ]
+      "target": "nsis"
     },
     "mac": {
       "icon": "Mac/RuttersLogo.icns",
