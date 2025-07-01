@@ -30,19 +30,24 @@
       "**/*",
       "assets/**/*",
       "media/**/*"
+      // REMOVE "Mac/**/*" and "Windows/**/*" from here if present!
     ],
     "extraResources": [
       { "from": "media/", "to": "media/" },
       { "from": "Windows/", "to": "Windows/" },
       { "from": "assets/", "to": "assets/" },
       { "from": "node_modules/node-wifi", "to": "node_modules/node-wifi" }
+      // REMOVE { "from": "Mac/", "to": "Mac/" } from here!
     ],
     "directories": {
       "buildResources": "assets"
     },
     "win": {
       "icon": "Windows/RuttersLogo.ico",
-      "target": "nsis"
+      "target": "nsis",
+      "extraResources": [
+        { "from": "Windows/", "to": "Windows/" }
+      ]
     },
     "mac": {
       "icon": "Mac/RuttersLogo.icns",
