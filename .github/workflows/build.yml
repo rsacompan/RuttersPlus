@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 20
       - run: npm install
+      - name: Fix app-builder permissions (Linux only)
+        if: runner.os == 'Linux'
+        run: chmod +x ./node_modules/app-builder-bin/linux/x64/app-builder || true
       - run: npm run dist
       - uses: actions/upload-artifact@v4
         with:
