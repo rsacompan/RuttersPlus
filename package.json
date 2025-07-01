@@ -28,16 +28,13 @@
     "publish": null,
     "files": [
       "**/*",
-      "assets/**/*",
-      "media/**/*"
-  
+      "!Mac/**/*"
     ],
     "extraResources": [
       { "from": "media/", "to": "media/" },
       { "from": "Windows/", "to": "Windows/" },
       { "from": "assets/", "to": "assets/" },
       { "from": "node_modules/node-wifi", "to": "node_modules/node-wifi" }
-     
     ],
     "directories": {
       "buildResources": "assets"
