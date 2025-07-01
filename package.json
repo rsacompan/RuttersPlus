@@ -28,7 +28,8 @@
     "publish": null,
     "files": [
       "**/*",
-      "!Mac/**/*"
+      "!Mac/**/*",
+      "!Mac"
     ],
     "extraResources": [
       { "from": "media/", "to": "media/" },
