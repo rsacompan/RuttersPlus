@@ -28,7 +28,9 @@
     "publish": null,
     "files": [
       "**/*",
-      "!Mac{,/**}"
+      "!Mac/**/*",
+      "!Mac",
+      "!**/*.icns"
     ],
     "extraResources": [
       { "from": "media/", "to": "media/" },
