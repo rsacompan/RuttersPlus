@@ -33,6 +33,3 @@
     "target": [ "AppImage", "deb" ]
   }
 }
-        with:
-          name: mac-build
-          path: dist/
