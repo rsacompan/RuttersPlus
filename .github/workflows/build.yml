@@ -1,35 +1,90 @@
-"build": {
-  "appId": "com.simplesystemssoftware.RuttersPlus",
-  "productName": "RuttersPlus",
-  "electronVersion": "28.2.3",
-  "publish": null,
-  "files": [
-    "**/*",
-    "assets/**/*",
-    "media/**/*"
-  ],
-  "extraResources": [
-    { "from": "media/", "to": "media/" },
-    { "from": "Mac/", "to": "Mac/" },
-    { "from": "Windows/", "to": "Windows/" },
-    { "from": "assets/", "to": "assets/" },
-    { "from": "node_modules/node-wifi", "to": "node_modules/node-wifi" }
-  ],
-  "directories": {
-    "buildResources": "assets"
-  },
-  "win": {
-    "icon": "Windows/RuttersLogo.ico",
-    "target": "nsis"
-  },
-  "mac": {
-    "icon": "Mac/RuttersLogo.icns",
-    "target": "dmg",
-    "identity": null
-  },
-  "linux": {
-    "icon": "assets/linux-icon.png",
-    "category": "Utility",
-    "target": [ "AppImage", "deb" ]
-  }
-}
+name: Build RuttersPlus App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-0 libnss3 libxss1 libasound2t64
+
+      - name: Clean and install dependencies
+        run: |
+          rm -rf node_modules
+          npm ci
+
+      - name: Fix app-builder permissions
+        run: chmod +x node_modules/app-builder-bin/linux/x64/app-builder || true
+
+      - name: Build Linux app
+        run: npm run dist
+
+      - name: Upload Linux build
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: dist/
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Clean and install dependencies
+        shell: cmd
+        run: |
+          if exist node_modules rmdir /s /q node_modules
+          npm ci
+
+      - name: Build Windows app
+        run: npm run dist
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: dist/
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Clean and install dependencies
+        run: |
+          rm -rf node_modules
+          npm ci
+
+      - name: Build Mac app
+        run: npm run dist
+
+      - name: Upload Mac build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: dist/
