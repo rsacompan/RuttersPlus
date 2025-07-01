@@ -1,37 +1,65 @@
-name: Build Electron App
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-
-jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run dist -- --linux
-
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run dist -- --win
-
-  build-mac:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run dist -- --mac
+{
+  "name": "rutters-plus",
+  "version": "1.0.0",
+  "description": "The Offical Rutters Desktop Experince",
+  "author": {
+    "name": "Simple System Software",
+    "email": "support@simplesystemsoftware.net"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "rebuild": "electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "electron": "^28.2.3",
+    "electron-builder": "24.6.0"
+  },
+  "dependencies": {
+    "node-wifi": "^2.0.16"
+  },
+  "build": {
+    "appId": "com.simplesystemssoftware.RuttersPlus",
+    "productName": "RuttersPlus",
+    "electronVersion": "28.2.3",
+    "files": [
+      "**/*",
+      "!Mac",
+      "!Mac/**/*"
+    ],
+    "extraResources": [
+      { "from": "media/", "to": "media/" },
+      { "from": "Windows/", "to": "Windows/" },
+      { "from": "assets/", "to": "assets/" },
+      { "from": "node_modules/node-wifi", "to": "node_modules/node-wifi" }
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "icon": "Windows/RuttersLogo.ico",
+      "target": "nsis",
+      "extraResources": [
+        { "from": "Windows/", "to": "Windows/" }
+      ]
+    },
+    "mac": {
+      "icon": "Mac/RuttersLogo.icns",
+      "target": "dmg",
+      "identity": null,
+      "extraResources": [
+        { "from": "Mac/", "to": "Mac/" }
+      ]
+    },
+    "linux": {
+      "category": "Utility",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  }
+}
