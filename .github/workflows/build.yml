@@ -26,6 +26,26 @@ jobs:
           rm -rf node_modules
           npm ci
 
+      - name: Debug - List all icon files before build
+        run: |
+          echo "=== .icns files ==="
+          find . -iname '*.icns' || true
+          echo "=== .ico files ==="
+          find . -iname '*.ico' || true
+          echo "=== .png files ==="
+          find . -iname '*.png' || true
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Listing assets directory ==="
+          ls -lhR ./assets || true
+
+      - name: Debug - Confirm Linux icon exists
+        run: |
+          if [ ! -f assets/linux-icon.png ]; then
+            echo "ERROR: assets/linux-icon.png does not exist!"
+            exit 1
+          fi
+
       - name: Fix app-builder permissions
         run: chmod +x node_modules/app-builder-bin/linux/x64/app-builder || true
 
