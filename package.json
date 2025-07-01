@@ -56,7 +56,6 @@
       ]
     },
     "linux": {
-      "icon": "assets/linux-icon.png",
       "category": "Utility",
       "target": [
         "AppImage",
