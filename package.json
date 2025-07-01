@@ -33,22 +33,18 @@
     ],
     "extraResources": [
       {
-        "from": "assets/",
-        "to": "assets/"
-      },
-      {
         "from": "media/",
         "to": "media/"
       },
-       {
+      {
         "from": "Mac/",
         "to": "Mac/"
       },
-       {
-        "from": "Window/s",
+      {
+        "from": "Windows/",
         "to": "Windows/"
       },
-       {
+      {
         "from": "build/",
         "to": "build/"
       },
@@ -72,7 +68,10 @@
     "linux": {
       "icon": "build/linux-icon.png",
       "category": "Utility",
-      "target": ["AppImage", "deb"]
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     }
   }
 }
