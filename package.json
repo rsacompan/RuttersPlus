@@ -25,10 +25,10 @@
     "appId": "com.simplesystemssoftware.RuttersPlus",
     "productName": "RuttersPlus",
     "electronVersion": "28.2.3",
+    "publish": null,
     "files": [
       "**/*",
-      "!Mac",
-      "!Mac/**/*"
+      "!Mac{,/**}"
     ],
     "extraResources": [
       { "from": "media/", "to": "media/" },
@@ -41,10 +41,7 @@
     },
     "win": {
       "icon": "Windows/RuttersLogo.ico",
-      "target": "nsis",
-      "extraResources": [
-        { "from": "Windows/", "to": "Windows/" }
-      ]
+      "target": "nsis"
     },
     "mac": {
       "icon": "Mac/RuttersLogo.icns",
