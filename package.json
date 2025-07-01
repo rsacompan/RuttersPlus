@@ -1,5 +1,5 @@
 {
-  "name": "rutters-plus",
+  "name": "rutters-savin",
   "version": "1.0.0",
   "description": "The Offical Rutters Desktop Experince",
   "author": {
@@ -22,8 +22,8 @@
     "node-wifi": "^2.0.16"
   },
   "build": {
-    "appId": "com.simplesystemssoftware.RuttersPlus",
-    "productName": "RuttersPlus",
+    "appId": "com.simplesystemssoftware.RuttersSavin",
+    "productName": "RuttersSavin",
     "electronVersion": "28.2.3",
     "publish": null,
     "files": [
