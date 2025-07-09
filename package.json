@@ -24,7 +24,7 @@
   },
   "build": {
     "appId": "com.simplesystemssoftware.RuttersSavin",
-    "productName": "RuttersSavin",
+    "productName": "Rutters Savin",
     "electronVersion": "28.2.3",
     "publish": null,
     "files": [
