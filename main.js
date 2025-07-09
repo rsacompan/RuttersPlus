@@ -110,3 +110,14 @@ ipcMain.on("system-action", (event, action) => {
         exec(restartCmd);
     }
 });
+const loudness = require("loudness");
+const { ipcMain } = require("electron");
+
+ipcMain.on("set-volume", async (_, level) => {
+    try {
+        await loudness.setVolume(level);
+        console.log(`Volume set to ${level}%`);
+    } catch (err) {
+        console.error("Failed to set volume:", err);
+    }
+});

@@ -1,5 +1,5 @@
 {
-  "name": "rutters-plus",
+  "name": "rutters-savin",
   "version": "1.0.0",
   "description": "The Offical Rutters Desktop Experince",
   "author": {
@@ -19,38 +19,32 @@
     "electron-builder": "24.6.0"
   },
   "dependencies": {
+    "loudness": "^0.4.2",
     "node-wifi": "^2.0.16"
   },
   "build": {
-    "appId": "com.simplesystemssoftware.RuttersPlus",
-    "productName": "RuttersPlus",
+    "appId": "com.simplesystemssoftware.RuttersSavin",
+    "productName": "RuttersSavin",
     "electronVersion": "28.2.3",
     "publish": null,
     "files": [
       "**/*",
-      "assets/**/*",
-      "media/**/*"
+      "!Mac/**/*",
+      "!Mac",
+      "!**/*.icns"
     ],
     "extraResources": [
-      {
-        "from": "assets/",
-        "to": "assets/"
-      },
       {
         "from": "media/",
         "to": "media/"
       },
-       {
-        "from": "Mac/",
-        "to": "Mac/"
-      },
-       {
-        "from": "Window/s",
+      {
+        "from": "Windows/",
         "to": "Windows/"
       },
-       {
-        "from": "build/",
-        "to": "build/"
+      {
+        "from": "assets/",
+        "to": "assets/"
       },
       {
         "from": "node_modules/node-wifi",
@@ -58,7 +52,7 @@
       }
     ],
     "directories": {
-      "buildResources": "build"
+      "buildResources": "assets"
     },
     "win": {
       "icon": "Windows/RuttersLogo.ico",
@@ -67,12 +61,21 @@
     "mac": {
       "icon": "Mac/RuttersLogo.icns",
       "target": "dmg",
-      "identity": null
+      "identity": null,
+      "extraResources": [
+        {
+          "from": "Mac/",
+          "to": "Mac/"
+        }
+      ]
     },
     "linux": {
-      "icon": "build/linux-icon.png",
       "category": "Utility",
-      "target": ["AppImage", "deb"]
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/linux-icon.png"
     }
   }
 }
