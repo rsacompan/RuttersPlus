@@ -19,6 +19,7 @@
     "electron-builder": "24.6.0"
   },
   "dependencies": {
+    "loudness": "^0.4.2",
     "node-wifi": "^2.0.16"
   },
   "build": {
@@ -33,10 +34,22 @@
       "!**/*.icns"
     ],
     "extraResources": [
-      { "from": "media/", "to": "media/" },
-      { "from": "Windows/", "to": "Windows/" },
-      { "from": "assets/", "to": "assets/" },
-      { "from": "node_modules/node-wifi", "to": "node_modules/node-wifi" }
+      {
+        "from": "media/",
+        "to": "media/"
+      },
+      {
+        "from": "Windows/",
+        "to": "Windows/"
+      },
+      {
+        "from": "assets/",
+        "to": "assets/"
+      },
+      {
+        "from": "node_modules/node-wifi",
+        "to": "node_modules/node-wifi"
+      }
     ],
     "directories": {
       "buildResources": "assets"
@@ -50,7 +63,10 @@
       "target": "dmg",
       "identity": null,
       "extraResources": [
-        { "from": "Mac/", "to": "Mac/" }
+        {
+          "from": "Mac/",
+          "to": "Mac/"
+        }
       ]
     },
     "linux": {
