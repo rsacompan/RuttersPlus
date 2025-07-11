@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "electron": "^28.2.3",
-    "electron-builder": "24.6.0"
+    "electron-builder": "^24.6.0",
+    "electron-packager": "^17.1.2"
   },
   "dependencies": {
     "loudness": "^0.4.2",
