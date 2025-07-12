@@ -1,6 +1,6 @@
 {
   "name": "rutters-savin",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "The Offical Rutters Desktop Experince",
   "author": {
     "name": "Simple System Software",
@@ -20,6 +20,7 @@
     "electron-packager": "^17.1.2"
   },
   "dependencies": {
+    "extract-zip": "^2.0.1",
     "loudness": "^0.4.2",
     "node-wifi": "^2.0.16"
   },

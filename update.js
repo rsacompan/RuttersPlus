@@ -1,11 +1,11 @@
-﻿coconst { app } = require("electron");
+﻿const { app } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const patchFiles = ["index.html", "config.json", "style.css", "scripts.js"];
+const patchFiles = ["test.html"];
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/update-channel/version.json";
 
 function fetchJSON(url) {
