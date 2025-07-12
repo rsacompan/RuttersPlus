@@ -5,7 +5,7 @@ const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const patchFiles = ["test.html","update.js","wifi-setup-complete.html","package.json"];
+const patchFiles = ["test.html","update.js","wifi-setup-complete.html"];
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/version.json";
 
 function fetchJSON(url) {
