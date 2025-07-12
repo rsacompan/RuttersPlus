@@ -5,7 +5,7 @@ const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const patchFiles = ["test.html","update.js","wifi-setup-complete.html"];
+const patchFiles = ["test.html", "update.js", "wifi-setup-complete.html"];
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/version.json";
 
 function fetchJSON(url) {
@@ -51,13 +51,25 @@ function downloadFile(url, destination) {
     });
 }
 
-async function applyPatch(patchSource, appDir) {
+async function applyPatch(patchSource, appDir, newVersion) {
     console.log("🔧 Applying patch update...");
     for (const file of patchFiles) {
         const remote = `${patchSource}${file}`;
         const local = path.join(appDir, file);
         await downloadFile(remote, local);
     }
+
+    // Update local package.json version
+    try {
+        const pkgPath = path.join(appDir, "package.json");
+        const pkg = JSON.parse(fs.readFileSync(pkgPath));
+        pkg.version = newVersion;
+        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+        console.log(`📝 Updated local package.json version to ${newVersion}`);
+    } catch (err) {
+        console.error("❌ Failed to update package.json version:", err.message || err);
+    }
+
     console.log("✅ Patch update applied successfully.");
 }
 
@@ -90,7 +102,7 @@ async function runUpdater(mainWindow) {
 
             if (info.installMode === "patch") {
                 const appDir = path.join(__dirname);
-                await applyPatch(info.patchSource, appDir);
+                await applyPatch(info.patchSource, appDir, info.version);
                 console.log("⏳ Waiting 20 seconds before relaunch...");
                 await new Promise(resolve => setTimeout(resolve, 20000));
                 app.relaunch();
