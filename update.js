@@ -5,7 +5,7 @@ const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const patchFiles = ["test.html"];
+const patchFiles = ["test.html","update.js","wifi-setup-complete.html"];
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/update-channel/version.json";
 
 function fetchJSON(url) {
@@ -69,11 +69,11 @@ async function applyFull(zipUrl) {
     await downloadFile(zipUrl, zipPath);
     await extract(zipPath, { dir: extractPath });
 
-    const exe = path.join(extractPath, "control-panel.exe");
+    const exePath = path.join(extractPath, "control-panel.exe");
 
     console.log("🚀 Launching new version...");
-    exec(`"${exe}"`, () => {
-        console.log("✅ Update launched, exiting current version.");
+    exec(`"${exePath}"`, () => {
+        console.log("✅ Update launched. Exiting current version.");
         app.quit();
     });
 }
@@ -87,24 +87,35 @@ async function runUpdater(mainWindow) {
 
         if (info.version !== current) {
             console.log(`🔄 Update available: ${current} → ${info.version}`);
+
             if (info.installMode === "patch") {
                 const appDir = path.join(__dirname);
                 await applyPatch(info.patchSource, appDir);
+                console.log("⏳ Waiting 20 seconds before relaunch...");
+                await new Promise(resolve => setTimeout(resolve, 20000));
                 app.relaunch();
                 app.exit();
+
             } else if (info.installMode === "full") {
                 await applyFull(info.zipUrl);
+
             } else {
                 console.warn("⚠️ Unknown installMode in version.json:", info.installMode);
+                console.log("⏳ Holding update screen for 20 seconds...");
+                await new Promise(resolve => setTimeout(resolve, 20000));
                 mainWindow.loadFile("index.html");
             }
+
         } else {
             console.log("✅ App is up to date.");
+            console.log("⏳ Showing update screen for 20 seconds...");
+            await new Promise(resolve => setTimeout(resolve, 20000));
             mainWindow.loadFile("index.html");
         }
+
     } catch (err) {
-        console.error("❌ Update process failed:", err);
-        mainWindow.loadFile("index.html"); // Fallback to normal launch
+        console.error("❌ Update process failed:", err.message || err);
+        mainWindow.loadFile("index.html");
     }
 }
 
