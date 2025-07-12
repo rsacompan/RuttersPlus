@@ -3,13 +3,16 @@ const path = require("path");
 const wifi = require("node-wifi");
 const { exec } = require("child_process");
 const loudness = require("loudness");
+const os = require("os");
+const { runUpdater } = require("./update");
 
 // Initialize WiFi module
 wifi.init({ iface: null });
 
 let mainWindow;
 
-function createMainWindow() {
+// ✅ Create Main Window
+async function createMainWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -25,7 +28,9 @@ function createMainWindow() {
     });
 
     Menu.setApplicationMenu(null);
-    mainWindow.loadFile("index.html");
+
+    // ✨ Run updater before launching UI
+    await runUpdater(mainWindow);
 
     mainWindow.webContents.on("before-input-event", (event, input) => {
         if (
@@ -39,9 +44,8 @@ function createMainWindow() {
         }
     });
 }
-// ✅ System Info Handler
-const os = require("os");
 
+// ✅ System Info Handler
 ipcMain.handle("get-system-info", async () => {
     const info = {
         os: `${os.type()} ${os.release()} (${os.platform()})`,
@@ -52,7 +56,6 @@ ipcMain.handle("get-system-info", async () => {
         gpu: "Unavailable"
     };
 
-    // Windows-specific GPU detection
     if (process.platform === "win32") {
         try {
             const { execSync } = require("child_process");
@@ -67,6 +70,7 @@ ipcMain.handle("get-system-info", async () => {
     return info;
 });
 
+// ✅ App Lifecycle
 app.whenReady().then(() => {
     createMainWindow();
 
@@ -157,7 +161,6 @@ ipcMain.on("launch-app", (_, app) => {
                 ? "open -a Steam"
                 : "steam";
             break;
-
         case "terminal":
             command = process.platform === "win32"
                 ? "start cmd"
@@ -165,7 +168,6 @@ ipcMain.on("launch-app", (_, app) => {
                 ? "open -a Terminal"
                 : "gnome-terminal";
             break;
-
         case "settings":
             command = process.platform === "win32"
                 ? 'start "" ms-settings:'
@@ -173,7 +175,6 @@ ipcMain.on("launch-app", (_, app) => {
                 ? "open -b com.apple.systempreferences"
                 : "gnome-control-center";
             break;
-
         case "file-manager":
             command = process.platform === "win32"
                 ? "explorer"
@@ -181,7 +182,6 @@ ipcMain.on("launch-app", (_, app) => {
                 ? "open ."
                 : "xdg-open ~";
             break;
-
         case "task-manager":
             command = process.platform === "win32"
                 ? "start taskmgr"
@@ -189,7 +189,6 @@ ipcMain.on("launch-app", (_, app) => {
                 ? 'open -a "Activity Monitor"'
                 : "gnome-system-monitor";
             break;
-
         default:
             console.log("❌ Unknown app:", app);
             return;
