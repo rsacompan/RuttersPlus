@@ -29,7 +29,11 @@ async function createMainWindow() {
 
     Menu.setApplicationMenu(null);
 
-    // ✨ Run updater before launching UI
+    // ✅ Dynamic path to unpacked update.html
+    const resolvedUpdateScreen = path.join(path.dirname(app.getAppPath()), "update.html");
+    mainWindow._loadUnpackedUpdate = () => mainWindow.loadFile(resolvedUpdateScreen);
+
+    // ✨ Run updater using dynamic update screen loader
     await runUpdater(mainWindow);
 
     mainWindow.webContents.on("before-input-event", (event, input) => {
@@ -58,11 +62,10 @@ ipcMain.handle("get-system-info", async () => {
 
     if (process.platform === "win32") {
         try {
-            const { execSync } = require("child_process");
             const output = execSync("wmic path win32_VideoController get name").toString();
             const lines = output.trim().split("\n").filter(l => l.trim() && l.trim() !== "Name");
             info.gpu = lines.join(", ");
-        } catch (err) {
+        } catch {
             info.gpu = "Unavailable";
         }
     }
@@ -73,7 +76,6 @@ ipcMain.handle("get-system-info", async () => {
 // ✅ App Lifecycle
 app.whenReady().then(() => {
     createMainWindow();
-
     globalShortcut.register("Control+Alt+Q", () => {
         app.quit();
     });
