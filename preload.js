@@ -54,3 +54,31 @@ window.addEventListener("message", (event) => {
         ipcRenderer.send("launch-app", app);
     }
 });
+const { contextBridge, ipcRenderer } = require("electron");
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
+
+contextBridge.exposeInMainWorld("versionAPI", {
+  getVersionStatus: () => {
+    return new Promise((resolve) => {
+      const localPath = path.join(require("electron").app.getPath("userData"), "local-version.txt");
+      const localVersion = fs.existsSync(localPath) ? fs.readFileSync(localPath, "utf8").trim() : require("electron").app.getVersion();
+
+      https.get("https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/version.json", res => {
+        let data = "";
+        res.on("data", chunk => data += chunk);
+        res.on("end", () => {
+          try {
+            const remote = JSON.parse(data).version;
+            resolve({ local: localVersion, remote });
+          } catch {
+            resolve({ local: localVersion, remote: "unavailable" });
+          }
+        });
+      }).on("error", () => {
+        resolve({ local: localVersion, remote: "unavailable" });
+      });
+    });
+  }
+});
