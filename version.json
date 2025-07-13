@@ -1,5 +1,13 @@
 {
-  "version": "1.3.8",
+  "version": "1.3.9",
   "installMode": "patch",
-  "patchSource": "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/"
+  "patchSource": "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/",
+  "patchFiles": [
+    "update.html",
+    "update.js",
+    "test.html",
+    "wifi-setup-complete.html",
+    "styles.css",
+    "config.json"
+  ]
 }
