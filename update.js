@@ -5,8 +5,9 @@ const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const patchFiles = ["test.html", "update.js", "wifi-setup-complete.html"];
+const patchFiles = ["test.html", "update.js", "wifi-setup-complete.html", "version.json","package.json"];
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/version.json";
+const localVersionPath = path.join(app.getPath("userData"), "local-version.txt");
 
 function fetchJSON(url) {
     return new Promise((resolve, reject) => {
@@ -59,15 +60,12 @@ async function applyPatch(patchSource, appDir, newVersion) {
         await downloadFile(remote, local);
     }
 
-    // Update local package.json version
+    // Write patched version to local-version.txt
     try {
-        const pkgPath = path.join(appDir, "package.json");
-        const pkg = JSON.parse(fs.readFileSync(pkgPath));
-        pkg.version = newVersion;
-        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-        console.log(`📝 Updated local package.json version to ${newVersion}`);
+        fs.writeFileSync(localVersionPath, newVersion);
+        console.log(`📝 Saved patched version to local-version.txt: ${newVersion}`);
     } catch (err) {
-        console.error("❌ Failed to update package.json version:", err.message || err);
+        console.error("❌ Failed to write local version:", err.message || err);
     }
 
     console.log("✅ Patch update applied successfully.");
@@ -95,7 +93,16 @@ async function runUpdater(mainWindow) {
         mainWindow.loadFile("update.html");
 
         const info = await fetchJSON(versionURL);
-        const current = app.getVersion();
+
+        // 🔍 Load version from local-version.txt or fallback to app version
+        let current = app.getVersion();
+        if (fs.existsSync(localVersionPath)) {
+            const raw = fs.readFileSync(localVersionPath, "utf8").trim();
+            if (raw) current = raw;
+        }
+
+        console.log("📦 Current version:", current);
+        console.log("🛰️ Remote version:", info.version);
 
         if (info.version !== current) {
             console.log(`🔄 Update available: ${current} → ${info.version}`);
