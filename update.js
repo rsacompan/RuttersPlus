@@ -5,7 +5,6 @@ const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const patchFiles = ["test.html", "update.js", "wifi-setup-complete.html", "version.json","package.json","update.html"];
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/version.json";
 const localVersionPath = path.join(app.getPath("userData"), "local-version.txt");
 
@@ -52,18 +51,21 @@ function downloadFile(url, destination) {
     });
 }
 
-async function applyPatch(patchSource, appDir, newVersion) {
+async function applyPatch(info) {
     console.log("🔧 Applying patch update...");
-    for (const file of patchFiles) {
-        const remote = `${patchSource}${file}`;
+
+    const appDir = path.dirname(app.getAppPath()); // Unpacked app folder
+    const patchList = info.patchFiles || [];
+
+    for (const file of patchList) {
+        const remote = `${info.patchSource}${file}`;
         const local = path.join(appDir, file);
         await downloadFile(remote, local);
     }
 
-    // Write patched version to local-version.txt
     try {
-        fs.writeFileSync(localVersionPath, newVersion);
-        console.log(`📝 Saved patched version to local-version.txt: ${newVersion}`);
+        fs.writeFileSync(localVersionPath, info.version);
+        console.log(`📝 Saved patched version to local-version.txt: ${info.version}`);
     } catch (err) {
         console.error("❌ Failed to write local version:", err.message || err);
     }
@@ -94,7 +96,6 @@ async function runUpdater(mainWindow) {
 
         const info = await fetchJSON(versionURL);
 
-        // 🔍 Load version from local-version.txt or fallback to app version
         let current = app.getVersion();
         if (fs.existsSync(localVersionPath)) {
             const raw = fs.readFileSync(localVersionPath, "utf8").trim();
@@ -108,8 +109,7 @@ async function runUpdater(mainWindow) {
             console.log(`🔄 Update available: ${current} → ${info.version}`);
 
             if (info.installMode === "patch") {
-                const appDir = path.join(__dirname);
-                await applyPatch(info.patchSource, appDir, info.version);
+                await applyPatch(info);
                 console.log("⏳ Waiting 20 seconds before relaunch...");
                 await new Promise(resolve => setTimeout(resolve, 20000));
                 app.relaunch();
@@ -120,14 +120,12 @@ async function runUpdater(mainWindow) {
 
             } else {
                 console.warn("⚠️ Unknown installMode in version.json:", info.installMode);
-                console.log("⏳ Holding update screen for 20 seconds...");
                 await new Promise(resolve => setTimeout(resolve, 20000));
                 mainWindow.loadFile("index.html");
             }
 
         } else {
             console.log("✅ App is up to date.");
-            console.log("⏳ Showing update screen for 20 seconds...");
             await new Promise(resolve => setTimeout(resolve, 20000));
             mainWindow.loadFile("index.html");
         }

@@ -1,6 +1,6 @@
 {
   "name": "rutters-savin",
-  "version": "1.3.8",
+  "version": "1.3.9",
   "description": "The Offical Rutters Desktop Experince",
   "author": {
     "name": "Simple System Software",
@@ -29,6 +29,16 @@
     "productName": "Rutters Savin",
     "electronVersion": "28.2.3",
     "publish": null,
+    "asar": true,
+    "asarUnpack": [
+      "update.js",
+      "wifi-setup-complete.html",
+      "test.html",
+      "update.html",
+      "package.json",
+      "version.json",
+      "update.js"
+    ],
     "files": [
       "**/*",
       "!Mac/**/*",
