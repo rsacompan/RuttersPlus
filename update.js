@@ -54,7 +54,7 @@ function downloadFile(url, destination) {
 async function applyPatch(info) {
     console.log("🔧 Applying patch update...");
 
-    const appDir = path.dirname(app.getAppPath()); // Unpacked app folder
+    const appDir = path.dirname(app.getAppPath());
     const patchList = info.patchFiles || [];
 
     for (const file of patchList) {
@@ -92,7 +92,9 @@ async function applyFull(zipUrl) {
 
 async function runUpdater(mainWindow) {
     try {
-        mainWindow.loadFile("update.html");
+        // ✅ Load the patchable version of update.html from unpacked directory
+        const unpackedUpdateHTML = path.join(path.dirname(app.getAppPath()), "update.html");
+        await mainWindow.loadFile(unpackedUpdateHTML);
 
         const info = await fetchJSON(versionURL);
 
