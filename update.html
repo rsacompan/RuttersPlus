@@ -9,5 +9,14 @@
 <body>
   <h1>Installing Update...</h1>
   <p>This may take a few moments. Please wait...</p>
+  <div id="version-status" style="font-family: sans-serif; font-size: 18px; margin-top: 20px;">
+  Loading version info...
+</div>
+<script>
+  window.versionAPI.getVersionStatus().then(({ local, remote }) => {
+    document.getElementById("version-status").textContent =
+      `Current version: ${local} | Latest available: ${remote}`;
+  });
+</script>
 </body>
 </html>
