@@ -1,7 +1,8 @@
 ﻿const { app, BrowserWindow, ipcMain, globalShortcut, Menu } = require("electron");
 const path = require("path");
+const fs = require("fs");
 const wifi = require("node-wifi");
-const { exec } = require("child_process");
+const { exec, execSync } = require("child_process");
 const loudness = require("loudness");
 const os = require("os");
 const { runUpdater } = require("./update");
@@ -29,13 +30,55 @@ async function createMainWindow() {
 
     Menu.setApplicationMenu(null);
 
-    // ✅ Dynamic path to unpacked update.html
-    const resolvedUpdateScreen = path.join(path.dirname(app.getAppPath()), "update.html");
-    mainWindow._loadUnpackedUpdate = () => mainWindow.loadFile(resolvedUpdateScreen);
+    const resolvedUpdateScreen = path.join(__dirname, "update.html");
+    const resolvedIndexScreen = path.join(__dirname, "index.html");
+
+    mainWindow._loadUnpackedUpdate = () => {
+        const updateExists = fs.existsSync(resolvedUpdateScreen);
+        console.log("🧪 Does update.html exist?", updateExists);
+
+        if (updateExists) {
+            console.log("🔍 Loading update screen from:", resolvedUpdateScreen);
+            mainWindow.loadFile(resolvedUpdateScreen);
+        } else {
+            console.warn("⚠️ update.html not found, loading index.html instead.");
+            mainWindow.loadFile(resolvedIndexScreen);
+        }
+    };
 
     // ✨ Run updater using dynamic update screen loader
     await runUpdater(mainWindow);
+    mainWindow._loadUnpackedUpdate();
 
+    // ✅ Send update metadata and logs after update.html loads
+    mainWindow.webContents.once("did-finish-load", () => {
+        console.log("📡 update.html loaded, sending update metadata...");
+
+        mainWindow.webContents.send("update-data", {
+            currentVersion: app.getVersion(),
+            newVersion: "1.3.12", // Replace with dynamic value if needed
+            patchNotes: [
+                "Testing Update System",
+                "Improved performance",
+                "Updated Updater"
+            ]
+        });
+
+        const logMessages = [
+            "Downloading patch...",
+            "Verifying integrity...",
+            "Applying changes...",
+            "Restarting app..."
+        ];
+
+        logMessages.forEach((msg, i) => {
+            setTimeout(() => {
+                mainWindow.webContents.send("update-log", msg);
+            }, i * 1000);
+        });
+    });
+
+    // ✅ Block disruptive keys
     mainWindow.webContents.on("before-input-event", (event, input) => {
         if (
             input.key === "F11" ||
@@ -48,6 +91,15 @@ async function createMainWindow() {
         }
     });
 }
+
+// ✅ Auto-redirect if no update is triggered
+ipcMain.on("no-update-redirect", () => {
+    const fallbackPath = path.join(__dirname, "index.html");
+    console.log("⏳ No update detected. Redirecting to index.html...");
+    if (mainWindow) {
+        mainWindow.loadFile(fallbackPath);
+    }
+});
 
 // ✅ System Info Handler
 ipcMain.handle("get-system-info", async () => {
@@ -76,8 +128,16 @@ ipcMain.handle("get-system-info", async () => {
 // ✅ App Lifecycle
 app.whenReady().then(() => {
     createMainWindow();
+
     globalShortcut.register("Control+Alt+Q", () => {
         app.quit();
+    });
+
+    globalShortcut.register("Control+Alt+D", () => {
+        if (mainWindow) {
+            console.log("🛠️ Secret shortcut triggered: toggling DevTools");
+            mainWindow.webContents.toggleDevTools();
+        }
     });
 });
 
