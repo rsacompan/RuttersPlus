@@ -3,29 +3,34 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-// Logging API
+// 🔍 Logging API
 contextBridge.exposeInMainWorld("electronAPI", {
   logMessage: (message) => console.log(message),
+
+  // 🆕 Update screen support
+  onUpdateData: (callback) => ipcRenderer.on("update-data", callback),
+  onUpdateLog: (callback) => ipcRenderer.on("update-log", callback),
+  sendNoUpdateRedirect: () => ipcRenderer.send("no-update-redirect")
 });
 
-// WiFi API
+// 📶 WiFi API
 contextBridge.exposeInMainWorld("wifiAPI", {
   scan: () => ipcRenderer.invoke("scan-networks"),
   connect: (ssid, password) => ipcRenderer.invoke("connect-to-wifi", ssid, password),
   disconnect: () => ipcRenderer.invoke("disconnect-wifi")
 });
 
-// Volume API
+// 🔊 Volume API
 contextBridge.exposeInMainWorld("volumeAPI", {
   setVolume: (level) => ipcRenderer.send("set-volume", level)
 });
 
-// System Specs API
+// 🖥️ System Specs API
 contextBridge.exposeInMainWorld("specsAPI", {
   getSystemInfo: () => ipcRenderer.invoke("get-system-info")
 });
 
-// Version Status API for update.html
+// 📦 Version Status API for update.html
 contextBridge.exposeInMainWorld("versionUI", {
   loadStatus: () => {
     return new Promise((resolve) => {

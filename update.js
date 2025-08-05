@@ -8,6 +8,25 @@ const { exec } = require("child_process");
 const versionURL = "https://raw.githubusercontent.com/rsacompan/RuttersPlus/patch-channel/version.json";
 const localVersionPath = path.join(app.getPath("userData"), "local-version.txt");
 
+// 🔧 Helper to send logs to update.html
+function logToWindow(mainWindow, message) {
+    console.log(message); // Still log to console
+    if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send("update-log", message);
+    }
+}
+
+// 🔧 Helper to send structured update data
+function sendUpdateData(mainWindow, current, info) {
+    if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send("update-data", {
+            currentVersion: current,
+            newVersion: info.version,
+            patchNotes: info.notes || []
+        });
+    }
+}
+
 function fetchJSON(url) {
     return new Promise((resolve, reject) => {
         https.get(url, res => {
@@ -18,41 +37,37 @@ function fetchJSON(url) {
                     const json = JSON.parse(data);
                     resolve(json);
                 } catch (err) {
-                    console.error("❌ Failed to parse version.json:", err);
                     reject(err);
                 }
             });
-        }).on("error", err => {
-            console.error("❌ Failed to fetch version.json:", err);
-            reject(err);
-        });
+        }).on("error", reject);
     });
 }
 
-function downloadFile(url, destination) {
+function downloadFile(url, destination, mainWindow) {
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(destination);
         https.get(url, res => {
             res.pipe(file);
             file.on("finish", () => {
                 file.close(() => {
-                    console.log(`✅ Downloaded: ${destination}`);
+                    logToWindow(mainWindow, `✅ Downloaded: ${destination}`);
                     resolve();
                 });
             });
             file.on("error", err => {
-                console.error(`❌ Error writing file: ${destination}`, err);
+                logToWindow(mainWindow, `❌ Error writing file: ${destination}`);
                 reject(err);
             });
         }).on("error", err => {
-            console.error(`❌ Error downloading file: ${url}`, err);
+            logToWindow(mainWindow, `❌ Error downloading file: ${url}`);
             reject(err);
         });
     });
 }
 
-async function applyPatch(info) {
-    console.log("🔧 Applying patch update...");
+async function applyPatch(info, mainWindow) {
+    logToWindow(mainWindow, "🔧 Applying patch update...");
 
     const appDir = path.dirname(app.getAppPath());
     const patchList = info.patchFiles || [];
@@ -60,39 +75,38 @@ async function applyPatch(info) {
     for (const file of patchList) {
         const remote = `${info.patchSource}${file}`;
         const local = path.join(appDir, file);
-        await downloadFile(remote, local);
+        await downloadFile(remote, local, mainWindow);
     }
 
     try {
         fs.writeFileSync(localVersionPath, info.version);
-        console.log(`📝 Saved patched version to local-version.txt: ${info.version}`);
+        logToWindow(mainWindow, `📝 Saved patched version to local-version.txt: ${info.version}`);
     } catch (err) {
-        console.error("❌ Failed to write local version:", err.message || err);
+        logToWindow(mainWindow, `❌ Failed to write local version: ${err.message || err}`);
     }
 
-    console.log("✅ Patch update applied successfully.");
+    logToWindow(mainWindow, "✅ Patch update applied successfully.");
 }
 
-async function applyFull(zipUrl) {
-    console.log("📦 Applying full update...");
+async function applyFull(zipUrl, mainWindow) {
+    logToWindow(mainWindow, "📦 Applying full update...");
     const zipPath = path.join(app.getPath("userData"), "update.zip");
     const extractPath = path.join(app.getPath("userData"), "update-temp");
 
-    await downloadFile(zipUrl, zipPath);
+    await downloadFile(zipUrl, zipPath, mainWindow);
     await extract(zipPath, { dir: extractPath });
 
     const exePath = path.join(extractPath, "control-panel.exe");
 
-    console.log("🚀 Launching new version...");
+    logToWindow(mainWindow, "🚀 Launching new version...");
     exec(`"${exePath}"`, () => {
-        console.log("✅ Update launched. Exiting current version.");
+        logToWindow(mainWindow, "✅ Update launched. Exiting current version.");
         app.quit();
     });
 }
 
 async function runUpdater(mainWindow) {
     try {
-        // ✅ Load the patchable version of update.html from unpacked directory
         const unpackedUpdateHTML = path.join(path.dirname(app.getAppPath()), "update.html");
         await mainWindow.loadFile(unpackedUpdateHTML);
 
@@ -104,36 +118,38 @@ async function runUpdater(mainWindow) {
             if (raw) current = raw;
         }
 
-        console.log("📦 Current version:", current);
-        console.log("🛰️ Remote version:", info.version);
+        logToWindow(mainWindow, `📦 Current version: ${current}`);
+        logToWindow(mainWindow, `🛰️ Remote version: ${info.version}`);
+
+        sendUpdateData(mainWindow, current, info);
 
         if (info.version !== current) {
-            console.log(`🔄 Update available: ${current} → ${info.version}`);
+            logToWindow(mainWindow, `🔄 Update available: ${current} → ${info.version}`);
 
             if (info.installMode === "patch") {
-                await applyPatch(info);
-                console.log("⏳ Waiting 20 seconds before relaunch...");
+                await applyPatch(info, mainWindow);
+                logToWindow(mainWindow, "⏳ Waiting 20 seconds before relaunch...");
                 await new Promise(resolve => setTimeout(resolve, 20000));
                 app.relaunch();
                 app.exit();
 
             } else if (info.installMode === "full") {
-                await applyFull(info.zipUrl);
+                await applyFull(info.zipUrl, mainWindow);
 
             } else {
-                console.warn("⚠️ Unknown installMode in version.json:", info.installMode);
+                logToWindow(mainWindow, `⚠️ Unknown installMode in version.json: ${info.installMode}`);
                 await new Promise(resolve => setTimeout(resolve, 20000));
                 mainWindow.loadFile("index.html");
             }
 
         } else {
-            console.log("✅ App is up to date.");
+            logToWindow(mainWindow, "✅ App is up to date.");
             await new Promise(resolve => setTimeout(resolve, 20000));
             mainWindow.loadFile("index.html");
         }
 
     } catch (err) {
-        console.error("❌ Update process failed:", err.message || err);
+        logToWindow(mainWindow, `❌ Update process failed: ${err.message || err}`);
         mainWindow.loadFile("index.html");
     }
 }

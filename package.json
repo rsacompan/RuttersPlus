@@ -32,12 +32,11 @@
     "asar": true,
     "asarUnpack": [
       "update.js",
-      "wifi-setup-complete.html",
-      "test.html",
       "update.html",
-      "package.json",
-      "version.json",
-      "update.js"
+      "test.html",
+      "wifi-setup-complete.html",
+      "styles.css",
+      "config.json"
     ],
     "files": [
       "**/*",
