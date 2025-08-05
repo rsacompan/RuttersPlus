@@ -56,7 +56,7 @@ async function createMainWindow() {
 
         mainWindow.webContents.send("update-data", {
             currentVersion: app.getVersion(),
-            newVersion: "1.3.13", // Replace with dynamic value if needed
+            newVersion: "1.3.14", // Replace with dynamic value if needed
             patchNotes: [
                 "Testing Update System",
                 "Deletd Broken File",
